@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: tuition-app
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn tut.wsgi:application"
