@@ -1,0 +1,148 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<div style="
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding:30px;
+    border-radius:12px;
+">
+
+    <div style="
+        background:#ffffff;
+        padding:25px;
+        border-radius:10px;
+        box-shadow:0 6px 15px rgba(0,0,0,0.15);
+    ">
+
+        <h3 style="margin-bottom:20px; color:#2c3e50;">
+            🎓 Student Dashboard
+        </h3>
+
+        <!-- STUDENT INFO -->
+        <div style="
+            background:#f1f3f6;
+            padding:15px;
+            border-radius:8px;
+            margin-bottom:20px;
+        ">
+            <p style="margin:0;"><strong>Name:</strong> {{ request.user.username }}</p>
+            <p style="margin:0;"><strong>Class:</strong> {{ student.class_name }}</p>
+        </div>
+
+        {% if is_new_student %}
+        <div style="
+            background:#e3f2fd;
+            border-left:6px solid #2196f3;
+            padding:15px;
+            border-radius:6px;
+            margin-bottom:25px;
+            color:#0d47a1;
+        ">
+            <strong>Welcome!</strong><br>
+            Your account has been created successfully.<br>
+            Marks, timetable, and attendance will be visible once the admin updates them.
+        </div>
+        {% endif %}
+
+        <!-- SUBJECT WISE RESULTS -->
+        <h4 style="color:#1e3a8a; margin-bottom:10px;">📘 Subject-Wise Results</h4>
+
+        {% if subject_results %}
+        <table class="table table-bordered table-striped" style="margin-bottom:30px;">
+            <thead style="background:#e8eaf6;">
+                <tr>
+                    <th>Subject</th>
+                    <th>Marks</th>
+                    <th>Percentage</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in subject_results %}
+                <tr>
+                    <td>{{ r.subject }}</td>
+                    <td>{{ r.obtained }} / {{ r.max }}</td>
+                    <td>{{ r.percentage }}%</td>
+                    <td>
+                        <strong style="color:
+                {% if r.grade == 'A+' %}#2e7d32
+                {% elif r.grade == 'A' %}#388e3c
+                {% elif r.grade == 'B+' %}#9e9d24
+                {% elif r.grade == 'B' %}#f9a825
+                {% elif r.grade == 'C+' %}#fb8c00
+                {% elif r.grade == 'C' %}#ef6c00
+                {% elif r.grade == 'D+' %}#e53935
+                {% else %}#b71c1c{% endif %}
+                ">
+                {{ r.grade }}
+                
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color:#666; margin-bottom:30px;">No marks available.</p>
+        {% endif %}
+
+        <!-- TIMETABLE -->
+        <h4 style="color:#00695c; margin-bottom:10px;">🗓 Timetable</h4>
+
+        {% if timetable %}
+        <table class="table table-bordered table-striped" style="margin-bottom:30px;">
+            <thead style="background:#e0f2f1;">
+                <tr>
+                    <th>Day</th>
+                    <th>Subject</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in timetable %}
+                <tr>
+                    <td>{{ t.day }}</td>
+                    <td>{{ t.subject.name }}</td>
+                    <td>{{ t.time }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color:#666; margin-bottom:30px;">No timetable available.</p>
+        {% endif %}
+
+        <!-- ATTENDANCE -->
+        <h4 style="color:#2e7d32; margin-bottom:10px;">✅ Attendance</h4>
+
+        {% if attendance %}
+        <table class="table table-bordered table-striped">
+            <thead style="background:#e8f5e9;">
+                <tr>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in attendance %}
+                <tr>
+                    <td>{{ a.date }}</td>
+                    <td>
+                        {% if a.status == "Present" %}
+                            <span style="color:#2e7d32; font-weight:bold;">✔ Present</span>
+                        {% else %}
+                            <span style="color:#c62828; font-weight:bold;">✖ Absent</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color:#666;">No attendance records available.</p>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
